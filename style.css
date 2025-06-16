@@ -1,157 +1,107 @@
-/* General Styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
-  transition: background 0.3s, color 0.3s;
+  padding: 1rem;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 header {
-  background: #f97316;
-  color: white;
-  padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1rem;
 }
 
-h1 {
-  margin: 0;
-}
-
-button#toggle-theme {
+#toggle-theme {
   padding: 0.5rem 1rem;
   border: none;
-  border-radius: 0.4rem;
-  background: white;
-  color: #f97316;
+  background: #444;
+  color: white;
   cursor: pointer;
-  font-weight: bold;
+  border-radius: 5px;
 }
 
-main {
-  padding: 2rem;
-  max-width: 1000px;
-  margin: auto;
-}
-
-/* Light/Dark Theme */
-body.light {
-  background: #f9fafb;
-  color: #111827;
-}
-
-body.dark {
-  background: #1f2937;
-  color: #f9fafb;
-}
-
-body.dark header {
-  background: #111827;
-  color: #f9fafb;
-}
-
-body.dark button#toggle-theme {
-  background: #f9fafb;
-  color: #111827;
-}
-
-/* Search Container Fix */
 .search-container {
   position: relative;
-  width: 100%;
   max-width: 400px;
-  margin: auto;
-  padding: 0 1rem; /* Add padding so it's not too close to edge */
-  box-sizing: border-box;
+  margin-bottom: 1rem;
 }
 
-/* Autocomplete List Full Fix */
+#search-bar {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
 #autocomplete-list {
   position: absolute;
   top: 100%;
   left: 0;
-  width: 100%;
+  right: 0;
   background: white;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  margin-top: 0.25rem;
-  padding: 0;
+  border: 1px solid #ccc;
+  border-top: none;
   list-style: none;
-  z-index: 999;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-height: 200px;
+  padding: 0;
+  margin: 0;
+  z-index: 10;
+  max-height: 150px;
   overflow-y: auto;
-  box-sizing: border-box;
 }
 
 #autocomplete-list li {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
   cursor: pointer;
-  transition: background 0.2s;
 }
 
 #autocomplete-list li:hover {
-  background-color: #f3f4f6;
-}
-
-/* Price Results Grid */
-#priceResults {
-  margin-top: 2rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  background: #f0f0f0;
 }
 
 .price-card {
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
+  background: #f6f6f6;
   padding: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
-.price-card:hover {
-  transform: translateY(-4px);
+.price-card ul {
+  padding-left: 1rem;
 }
 
-.price-card h3 {
-  margin-top: 0;
-  color: #f97316;
+.cart {
+  margin-top: 2rem;
 }
 
-body.dark .price-card {
-  background: #374151;
-  border-color: #4b5563;
+/* Dark Mode Support */
+body.dark {
+  background-color: #121212;
+  color: #f1f1f1;
 }
 
+body.dark #toggle-theme {
+  background: #eee;
+  color: #121212;
+}
+
+body.dark #search-bar,
+body.dark .search-container,
+body.dark .price-card,
 body.dark #autocomplete-list {
-  background: #1f2937;
+  background-color: #1e1e1e;
   color: white;
-  border-color: #374151;
+  border-color: #555;
 }
 
 body.dark #autocomplete-list li:hover {
-  background-color: #374151;
+  background: #333;
 }
 
-/* Cart Styles */
-#cart {
-  background: #f3f4f6;
-  padding: 1.5rem;
-  margin-top: 3rem;
-  border-radius: 0.75rem;
-}
-
-#cart h2 {
-  margin-top: 0;
-}
-
-body.dark #cart {
-  background: #374151;
-}
-
+/* Responsive Fix for autocomplete */
 @media (max-width: 480px) {
   .search-container {
     padding: 0 1rem;
