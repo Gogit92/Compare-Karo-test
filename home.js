@@ -1,9 +1,40 @@
+// === Mock product list for autocomplete ===
+const mockProductNames = [
+  "Milk", "Atta", "Bread", "Eggs", "Butter", "Rice", "Oil", "Tomato", "Potato", "Onion"
+];
+
+// === Mock prices for display ===
 const mockPrices = [
   { platform: "Blinkit", price: 49, weight: "500g", url: "#" },
   { platform: "Zepto", price: 47, weight: "500g", url: "#" },
   { platform: "BigBasket", price: 51, weight: "500g", url: "#" }
 ];
 
+// === Autocomplete feature ===
+const searchInput = document.getElementById("searchInput");
+const autocompleteList = document.getElementById("autocomplete-list");
+
+searchInput.addEventListener("input", () => {
+  const query = searchInput.value.toLowerCase();
+  autocompleteList.innerHTML = "";
+
+  if (query.length < 2) return;
+
+  const matches = mockProductNames.filter(item => item.toLowerCase().includes(query));
+
+  matches.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = item;
+    li.addEventListener("click", () => {
+      searchInput.value = item;
+      autocompleteList.innerHTML = "";
+      renderPriceComparison(item);
+    });
+    autocompleteList.appendChild(li);
+  });
+});
+
+// === Price comparison cards ===
 function renderPriceComparison(query) {
   const container = document.getElementById("priceResults");
   container.innerHTML = "";
@@ -23,7 +54,8 @@ function renderPriceComparison(query) {
   });
 }
 
-document.getElementById("searchInput").addEventListener("change", (e) => {
+// === Manual trigger when typing finished ===
+searchInput.addEventListener("change", (e) => {
   const query = e.target.value;
   if (query.length > 2) renderPriceComparison(query);
 });
