@@ -1,28 +1,29 @@
-const toggle = document.getElementById('toggle-theme');
-toggle.addEventListener('click', () => {
-  document.body.classList.toggle('dark');
-  document.body.classList.toggle('light');
-  document.getElementById('cart').classList.toggle('dark');
-});
+const mockPrices = [
+  { platform: "Blinkit", price: 49, weight: "500g", url: "#" },
+  { platform: "Zepto", price: 47, weight: "500g", url: "#" },
+  { platform: "BigBasket", price: 51, weight: "500g", url: "#" }
+];
 
-// Dummy autocomplete data
-const products = ["Apple", "Banana", "Bread", "Butter", "Cheese", "Atta", "Rice", "Paneer", "Tomato", "Oil"];
-const searchBar = document.getElementById('search-bar');
-const acList = document.getElementById('autocomplete-list');
+function renderPriceComparison(query) {
+  const container = document.getElementById("priceResults");
+  container.innerHTML = "";
 
-searchBar.addEventListener('input', () => {
-  const query = searchBar.value.toLowerCase();
-  acList.innerHTML = '';
-  if (!query) return;
+  mockPrices.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "rounded-2xl shadow-md p-4 bg-white dark:bg-gray-800";
 
-  const matches = products.filter(p => p.toLowerCase().includes(query)).slice(0, 6);
+    card.innerHTML = `
+      <h3 class="text-lg font-semibold mb-1">${item.platform}</h3>
+      <p class="text-sm text-gray-600 dark:text-gray-300">${item.weight}</p>
+      <p class="text-xl font-bold text-green-600 dark:text-green-400">₹${item.price}</p>
+      <button class="mt-2 px-4 py-1 text-sm rounded-lg bg-gray-200 dark:bg-gray-700 cursor-not-allowed" disabled>Shop Now</button>
+    `;
 
-  matches.forEach(item => {
-    const li = document.createElement('li');
-    li.textContent = item;
-    li.addEventListener('click', () => {
-      alert(`Selected: ${item}`);
-    });
-    acList.appendChild(li);
+    container.appendChild(card);
   });
+}
+
+document.getElementById("searchInput").addEventListener("change", (e) => {
+  const query = e.target.value;
+  if (query.length > 2) renderPriceComparison(query);
 });
