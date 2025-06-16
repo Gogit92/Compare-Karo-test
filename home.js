@@ -1,71 +1,88 @@
+// home.js
+
+const products = [
+  {
+    name: "Fortune Rice Bran Oil 1L",
+    brand: "Fortune",
+    weight: "1L",
+    prices: {
+      Blinkit: "₹135",
+      Zepto: "₹132",
+      BigBasket: "₹134",
+    },
+  },
+  {
+    name: "Tata Salt 1kg",
+    brand: "Tata",
+    weight: "1kg",
+    prices: {
+      Blinkit: "₹28",
+      Zepto: "₹27",
+      BigBasket: "₹29",
+    },
+  },
+  {
+    name: "Aashirvaad Atta 5kg",
+    brand: "Aashirvaad",
+    weight: "5kg",
+    prices: {
+      Blinkit: "₹250",
+      Zepto: "₹245",
+      BigBasket: "₹248",
+    },
+  },
+];
+
 const searchBar = document.getElementById("search-bar");
 const autocompleteList = document.getElementById("autocomplete-list");
 const priceResults = document.getElementById("priceResults");
-const themeToggleBtn = document.getElementById("toggle-theme");
 
-// Predefined products
-const products = [
-  { name: "Aashirvaad Atta", weight: "5kg" },
-  { name: "Fortune Rice Bran Oil", weight: "1L" },
-  { name: "Tata Salt", weight: "1kg" },
-  { name: "Colgate Toothpaste", weight: "200g" },
-];
-
-// Mock price data for comparison
-const mockPrices = {
-  "Aashirvaad Atta": { Blinkit: 250, Zepto: 245, BigBasket: 260 },
-  "Fortune Rice Bran Oil": { Blinkit: 135, Zepto: 132, BigBasket: 130 },
-  "Tata Salt": { Blinkit: 25, Zepto: 24, BigBasket: 26 },
-  "Colgate Toothpaste": { Blinkit: 90, Zepto: 88, BigBasket: 92 },
-};
-
-// === Autocomplete functionality ===
 searchBar.addEventListener("input", () => {
   const query = searchBar.value.toLowerCase();
   autocompleteList.innerHTML = "";
 
-  if (!query) return;
-
-  products
-    .filter(p => p.name.toLowerCase().includes(query))
-    .forEach(product => {
-      const li = document.createElement("li");
-      li.textContent = product.name;
-      li.addEventListener("click", () => {
-        searchBar.value = product.name;
-        autocompleteList.innerHTML = "";
-        showPrices(product.name);
-      });
-      autocompleteList.appendChild(li);
-    });
-});
-
-// === Price comparison display ===
-function showPrices(productName) {
-  priceResults.innerHTML = "";
-  const prices = mockPrices[productName];
-  if (!prices) {
-    priceResults.innerHTML = "<p>No price data available.</p>";
+  if (query.length === 0) {
+    priceResults.innerHTML = "";
     return;
   }
 
-  const lowest = Math.min(...Object.values(prices));
+  const matches = products.filter((product) =>
+    product.name.toLowerCase().includes(query)
+  );
 
-  Object.entries(prices).forEach(([platform, price]) => {
-    const card = document.createElement("div");
-    card.className = "price-card";
-    card.innerHTML = `
-      <h3>${platform}</h3>
-      <p>${productName}</p>
-      <strong>₹${price} ${price === lowest ? "<span>(Lowest)</span>" : ""}</strong>
-    `;
-    priceResults.appendChild(card);
+  matches.forEach((product) => {
+    const li = document.createElement("li");
+    li.textContent = product.name;
+    li.addEventListener("click", () => {
+      searchBar.value = product.name;
+      autocompleteList.innerHTML = "";
+      displayPrices(product);
+    });
+    autocompleteList.appendChild(li);
   });
+});
+
+function displayPrices(product) {
+  priceResults.innerHTML = `
+    <div class="product-card">
+      <h3>${product.name}</h3>
+      <p><strong>Brand:</strong> ${product.brand}</p>
+      <p><strong>Weight:</strong> ${product.weight}</p>
+      <div class="platform-prices">
+        ${Object.entries(product.prices)
+          .map(
+            ([platform, price]) =>
+              `<div class="platform-price"><strong>${platform}:</strong> ${price}</div>`
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
 }
 
-// === Theme toggle logic ===
-themeToggleBtn.addEventListener("click", () => {
-  const isDark = document.body.classList.toggle("dark");
-  document.body.classList.toggle("light", !isDark);
-  themeToggleBtn.textContent = isDark ? "Light Mode" : "Dark Mode";
+// Dark Mode Toggle
+document.getElementById("toggle-theme").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  const mode = document.body.classList.contains("dark") ? "Dark" : "Light";
+  document.getElementById("toggle-theme").textContent = `${mode} Mode`;
 });
