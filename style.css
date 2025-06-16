@@ -151,3 +151,16 @@ body.dark #autocomplete-list li:hover {
 body.dark #cart {
   background: #374151;
 }
+
+@media (max-width: 480px) {
+  .search-container {
+    padding: 0 1rem;
+  }
+
+  #autocomplete-list {
+    left: 0;
+    right: 0;
+    width: auto;
+    margin: 0 auto;
+  }
+}
