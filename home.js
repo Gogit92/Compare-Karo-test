@@ -1,61 +1,106 @@
-// === Mock product list for autocomplete ===
-const mockProductNames = [
-  "Milk", "Atta", "Bread", "Eggs", "Butter", "Rice", "Oil", "Tomato", "Potato", "Onion"
+const products = [
+  "Aashirvaad Atta",
+  "Fortune Oil",
+  "Tata Salt",
+  "Amul Milk",
+  "Surf Excel",
+  "Maggie Noodles",
+  "Dove Shampoo",
+  "Colgate Toothpaste",
+  "Red Label Tea"
 ];
 
-// === Mock prices for display ===
-const mockPrices = [
-  { platform: "Blinkit", price: 49, weight: "500g", url: "#" },
-  { platform: "Zepto", price: 47, weight: "500g", url: "#" },
-  { platform: "BigBasket", price: 51, weight: "500g", url: "#" }
-];
-
-// === Autocomplete feature ===
-const searchInput = document.getElementById("searchInput");
+const searchInput = document.getElementById("search-bar");
 const autocompleteList = document.getElementById("autocomplete-list");
+const resultsContainer = document.getElementById("priceResults");
 
+// Theme toggle logic
+const themeToggle = document.getElementById('toggle-theme');
+const body = document.body;
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+body.className = savedTheme;
+themeToggle.textContent = savedTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
+
+themeToggle.addEventListener('click', () => {
+  const isDark = body.classList.contains('dark');
+  body.className = isDark ? 'light' : 'dark';
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  themeToggle.textContent = isDark ? 'Dark Mode' : 'Light Mode';
+});
+
+// Autocomplete logic
 searchInput.addEventListener("input", () => {
   const query = searchInput.value.toLowerCase();
   autocompleteList.innerHTML = "";
 
-  if (query.length < 2) return;
+  if (query.length === 0) return;
 
-  const matches = mockProductNames.filter(item => item.toLowerCase().includes(query));
+  const filtered = products.filter(product =>
+    product.toLowerCase().includes(query)
+  );
 
-  matches.forEach(item => {
+  filtered.forEach(product => {
     const li = document.createElement("li");
-    li.textContent = item;
+    li.textContent = product;
     li.addEventListener("click", () => {
-      searchInput.value = item;
+      searchInput.value = product;
       autocompleteList.innerHTML = "";
-      renderPriceComparison(item);
+      displayMockPrices(product);
     });
     autocompleteList.appendChild(li);
   });
 });
 
-// === Price comparison cards ===
-function renderPriceComparison(query) {
-  const container = document.getElementById("priceResults");
-  container.innerHTML = "";
+// Mock price display
+function displayMockPrices(productName) {
+  const mockData = {
+    "Aashirvaad Atta": {
+      weight: "5kg",
+      prices: {
+        Blinkit: 260,
+        Zepto: 255,
+        BigBasket: 250
+      }
+    },
+    "Fortune Oil": {
+      weight: "1L",
+      prices: {
+        Blinkit: 135,
+        Zepto: 132,
+        BigBasket: 130
+      }
+    }
+    // Add more items as needed
+  };
 
-  mockPrices.forEach((item) => {
-    const card = document.createElement("div");
-    card.className = "rounded-2xl shadow-md p-4 bg-white dark:bg-gray-800";
+  const data = mockData[productName];
+  resultsContainer.innerHTML = "";
 
-    card.innerHTML = `
-      <h3 class="text-lg font-semibold mb-1">${item.platform}</h3>
-      <p class="text-sm text-gray-600 dark:text-gray-300">${item.weight}</p>
-      <p class="text-xl font-bold text-green-600 dark:text-green-400">₹${item.price}</p>
-      <button class="mt-2 px-4 py-1 text-sm rounded-lg bg-gray-200 dark:bg-gray-700 cursor-not-allowed" disabled>Shop Now</button>
-    `;
+  if (!data) {
+    resultsContainer.innerHTML = "<p>No price data available.</p>";
+    return;
+  }
 
-    container.appendChild(card);
-  });
+  const lowest = Math.min(...Object.values(data.prices));
+
+  const card = document.createElement("div");
+  card.className = "price-card";
+
+  card.innerHTML = `
+    <h3>${productName}</h3>
+    <p>Weight: ${data.weight}</p>
+    <ul>
+      ${Object.entries(data.prices)
+        .map(
+          ([platform, price]) =>
+            `<li>${platform}: ₹${price} ${
+              price === lowest ? "<strong>(Lowest)</strong>" : ""
+            }</li>`
+        )
+        .join("")}
+    </ul>
+  `;
+
+  resultsContainer.appendChild(card);
 }
-
-// === Manual trigger when typing finished ===
-searchInput.addEventListener("change", (e) => {
-  const query = e.target.value;
-  if (query.length > 2) renderPriceComparison(query);
-});
