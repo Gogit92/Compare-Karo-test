@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compare Karo</title>
+  <link rel="stylesheet" href="home.css" />
+</head>
+<body class="light">
+  <header>
+    <h1>🛒 Compare Karo</h1>
+    <button id="toggle-theme">Dark Mode</button>
+  </header>
+
+  <main>
+    <div class="search-container">
+      <input type="text" id="search-bar" placeholder="Search products..." />
+      <ul id="autocomplete-list"></ul>
+    </div>
+
+    <div id="results"></div>
+  </main>
+
+  <div id="cart" class="cart">
+    <h2>Your Cart</h2>
+    <ul id="cart-items"></ul>
+    <div id="cart-summary"></div>
+  </div>
+
+  <script src="home.js"></script>
+</body>
+</html>
